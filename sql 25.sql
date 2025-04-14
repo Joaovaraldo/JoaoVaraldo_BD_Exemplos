@@ -1,0 +1,1 @@
+select cliente.nome , item.quantidade from cliente,item where quantidade > 23
