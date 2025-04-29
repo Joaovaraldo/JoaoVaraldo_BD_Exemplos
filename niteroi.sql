@@ -1,0 +1,1 @@
+select nomecliente,cidade from cliente where cidade = 'Niteroi'

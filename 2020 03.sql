@@ -1,0 +1,1 @@
+Select distinct cidade,nome from cliente left Join produto on validade <'2020/03/15'

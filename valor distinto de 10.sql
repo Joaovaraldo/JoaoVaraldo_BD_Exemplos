@@ -1,0 +1,1 @@
+select distinct valor, descricao from produto where valor>10.00 order by valor

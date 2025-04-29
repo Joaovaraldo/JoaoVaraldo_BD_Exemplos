@@ -1,0 +1,1 @@
+select distinct nome,cidade from cliente order by cidade

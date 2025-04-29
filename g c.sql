@@ -1,0 +1,1 @@
+select cliente.nome, cliente.cidade, cliente.sexo from cliente where cliente.cidade like 'G%' or cliente.cidade like 'C%'

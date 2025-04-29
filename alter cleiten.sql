@@ -1,0 +1,1 @@
+alter table cliente add cep varchar(10) after cidade
