@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard de Vendas</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 240px;
+            background-color: #2e2e2e;
+            height: 100vh;
+            position: fixed;
+            display: flex;
+            flex-direction: column;
+            padding-top: 20px;
+        }
+
+        .sidebar h2 {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .sidebar a {
+            color: #fff;
+            padding: 15px 20px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #444;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 30px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background-color: #3f3f3f;
+            color: #fff;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #e0f7ff;
+        }
+
+        .chart-section {
+            margin: 40px auto;
+            max-width: 700px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #pagamentoChart {
+            max-height: 300px;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <a href="#" onclick="showSection('tabela')">
+            <img src="WhatsApp Image 2025-04-30 at 14.02.59.jpeg" alt="Logo Padaria do Alemão" style="width: 180px; display: block; margin: 0 auto 20px; border-radius: 10px;">
+        </a>
+        <a href="#" onclick="showSection('tabela')">📋 Tabela de Vendas</a>
+        <a href="#" onclick="showSection('grafico-produto')">📦 Por Produto</a>
+        <a href="#" onclick="showSection('grafico-pagamento')">💳 Por Pagamento</a>
+        <a href="#" onclick="showSection('grafico-funcionario')">👨‍💼 Por Funcionário</a>
+        <a href="#" onclick="showSection('grafico-dia')">📅 Por Dia</a>
+    </div>
+    
+
+<div class="main-content">
+    <div id="tabela" class="section active">
+        <h1>Relatório de Vendas</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Venda</th>
+                    <th>Data</th>
+                    <th>ID Funcionário</th>
+                    <th>ID Produto</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário</th>
+                    <th>Total</th>
+                    <th>Pagamento</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>1</td><td>2025-04-29</td><td>101</td><td>201</td><td>3</td><td>10</td><td>30</td><td>Cartão</td></tr>
+                <tr><td>2</td><td>2025-04-28</td><td>102</td><td>205</td><td>2</td><td>15.5</td><td>31</td><td>Dinheiro</td></tr>
+                <tr><td>3</td><td>2025-04-27</td><td>103</td><td>210</td><td>1</td><td>100</td><td>100</td><td>PIX</td></tr>
+                <tr><td>4</td><td>2025-04-27</td><td>101</td><td>204</td><td>4</td><td>8</td><td>32</td><td>Cartão</td></tr>
+                <tr><td>5</td><td>2025-04-26</td><td>105</td><td>203</td><td>2</td><td>12.5</td><td>25</td><td>Dinheiro</td></tr>
+                <tr><td>6</td><td>2025-04-25</td><td>106</td><td>206</td><td>5</td><td>20</td><td>100</td><td>PIX</td></tr>
+                <tr><td>7</td><td>2025-04-24</td><td>107</td><td>207</td><td>3</td><td>9.9</td><td>29.7</td><td>Cartão</td></tr>
+                <tr><td>8</td><td>2025-04-23</td><td>108</td><td>208</td><td>6</td><td>5</td><td>30</td><td>Dinheiro</td></tr>
+                <tr><td>9</td><td>2025-04-22</td><td>109</td><td>209</td><td>1</td><td>250</td><td>250</td><td>PIX</td></tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div id="grafico-produto" class="section chart-section">
+        <h2>Vendas por Produto</h2>
+        <canvas id="produtoChart"></canvas>
+    </div>
+
+    <div id="grafico-pagamento" class="section chart-section">
+        <h2>Vendas por Forma de Pagamento</h2>
+        <canvas id="pagamentoChart"></canvas>
+    </div>
+
+    <div id="grafico-funcionario" class="section chart-section">
+        <h2>Vendas por Funcionário</h2>
+        <canvas id="funcionarioChart"></canvas>
+    </div>
+
+    <div id="grafico-dia" class="section chart-section">
+        <h2>Vendas por Dia</h2>
+        <canvas id="diaChart"></canvas>
+    </div>
+</div>
+
+<script>
+    function showSection(id) {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    const produtoData = {
+        labels: ['201', '203', '204', '205', '206', '207', '208', '209', '210'],
+        datasets: [{
+            label: 'Quantidade',
+            data: [3, 2, 4, 2, 5, 3, 6, 1, 1],
+            backgroundColor: ['#FF5733', '#33FF57', '#3357FF', '#FF33A1', '#FFDA33', '#8E44AD', '#00C9A7', '#FFC300', '#C70039']
+        }]
+    };
+
+    const pagamentoData = {
+        labels: ['Cartão', 'Dinheiro', 'PIX'],
+        datasets: [{
+            label: 'Formas de Pagamento',
+            data: [3, 3, 3],
+            backgroundColor: ['#FF5733', '#33FF57', '#3357FF']
+        }]
+    };
+
+    const funcionarioData = {
+        labels: ['101', '102', '103', '105', '106', '107', '108', '109'],
+        datasets: [{
+            label: 'Vendas por Funcionário',
+            data: [2, 1, 1, 1, 1, 1, 1, 1],
+            backgroundColor: ['#845EC2', '#FFC75F', '#F9F871', '#FF6F91', '#2C73D2', '#0081CF', '#B39CD0', '#FF9671']
+        }]
+    };
+
+    const diaData = {
+        labels: ['2025-04-22', '2025-04-23', '2025-04-24', '2025-04-25', '2025-04-26', '2025-04-27', '2025-04-28', '2025-04-29'],
+        datasets: [{
+            label: 'Total por Dia',
+            data: [250, 30, 29.7, 100, 25, 132, 31, 30],
+            backgroundColor: '#00C9A7',
+            borderColor: '#00C9A7',
+            tension: 0.3
+        }]
+    };
+
+    new Chart(document.getElementById('produtoChart'), { type: 'bar', data: produtoData });
+    new Chart(document.getElementById('pagamentoChart'), { type: 'pie', data: pagamentoData });
+    new Chart(document.getElementById('funcionarioChart'), { type: 'bar', data: funcionarioData });
+    new Chart(document.getElementById('diaChart'), { type: 'line', data: diaData });
+</script>
+
+
+</body>
+</html>
